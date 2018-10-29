@@ -7,4 +7,12 @@ class PixelProjects::Dribbble
     dribbbles.each {|key, value| self.send(("#{key}="), value) }
     @@all << self
   end
+
+  def self.create_from_collection(dribbbles)
+    dribbbles.each {|dribbble| PixelProjects::Dribbble.new(dribbble) }
+  end
+
+  def self.all
+    @@all
+  end
 end
