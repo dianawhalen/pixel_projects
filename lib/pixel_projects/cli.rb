@@ -2,6 +2,7 @@ class PixelProjects::CLI
 
   def call
     greeting
+    goodbye
   end
 
   def greeting
@@ -14,3 +15,15 @@ class PixelProjects::CLI
     puts "      Hold tight for the most recent pixel creations!!         "
     puts "⭑-------------------------------------------------------------⭑"
   end
+
+  def goodbye
+    puts "⭑-------------------------------------------------------------⭑"
+    puts "                                                               "
+    puts "           ¸,ø¤º°`°º¤ø,¸¸,ø¤º°º¤ø,¸¸,ø¤º°`°º¤ø,¸               "
+    puts "      ¸,ø¤º°`°º¤ø,¸¸,ø¤º° GOODBYE °º¤ø,¸¸,ø¤º°`°º¤ø,¸          "
+    puts "           ¸,ø¤º°`°º¤ø,¸¸,ø¤º°º¤ø,¸¸,ø¤º°`°º¤ø,¸               "
+    puts "                                                               "
+    puts "      See you next time for more trending Dribbbles!!          "
+    puts "⭑-------------------------------------------------------------⭑"
+  end
+end
