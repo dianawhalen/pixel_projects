@@ -4,6 +4,7 @@ class PixelProjects::CLI
   def call
     greeting
     make_dribbbles
+    list_dribbbles
     goodbye
   end
 
@@ -21,6 +22,17 @@ class PixelProjects::CLI
   def make_dribbbles
     dribbbles = PixelProjects::Scraper.scrape_dribbbles(BASE_PATH + '/#')
     PixelProjects::Dribbble.create_from_collection(dribbbles)
+  end
+
+  def list_dribbbles
+    @dribbbles = PixelProjects::Dribbble.all
+    @dribbbles.each.with_index(1) do |dribbble, i|
+      puts "#{i.to_s.rjust(2, "0")}. ⭑ Dribbble: " + dribbble.title + " by " + dribbble.designer_name
+      puts "    ⭑ Shot Url: " + BASE_PATH + dribbble.shot_url
+      puts "    ⭑ Designer Url: " + BASE_PATH + dribbble.designer_url
+      puts "    ⭑ Comment: " + dribbble.comment.gsub("\n","")
+      puts "⭑-------------------------------------------------------------⭑"
+    end
   end
 
   def goodbye
