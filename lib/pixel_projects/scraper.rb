@@ -1,5 +1,5 @@
 class PixelProjects::Scraper
-  attr_accessor :title, :comment, :shot_url, :designer_url, :designer_name
+  attr_accessor :title, :comment, :shot_url, :designer_url, :designer_name, :name, :location, :bio, :skills, :teams, :profile_url, :web
 
   def self.scrape_dribbbles(dribbbles_url)
     doc = Nokogiri::HTML(open("https://dribbble.com/#"))
@@ -18,4 +18,23 @@ class PixelProjects::Scraper
     dribbbles
   end
 
+  def self.scrape_designer(designer_url)
+    doc = Nokogiri::HTML(open(designer_url))
+
+    designers = []
+
+    doc.css('.main-full.floating-sidebar-container.group').each do |designer|
+      profile_url = designer.at("h2.vcard a.url").attr('href').prepend("https://dribbble.com")
+      name = designer.at("a.url").text.strip
+      location = designer.css("h2.vcard").search("span.locality").text
+      bio = designer.css(".bio").text
+      skills = designer.css("ul.skills-list").search("a").map(&:text)
+      teams = designer.css("ul.profile-details.on-teams").search("a").map(&:text).map(&:strip)
+      links = designer.css("ul.profile-details").search("a").map(&:text).map(&:strip)
+      web = links - teams
+
+      designers << {profile_url: profile_url, name: name, location: location, bio: bio, skills: skills, teams: teams, web: web}
+    end
+    designers
+  end
 end
