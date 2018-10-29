@@ -7,6 +7,7 @@ class PixelProjects::CLI
     make_designers
     list_dribbbles
     list_designer
+    menu
     goodbye
   end
 
@@ -47,19 +48,37 @@ class PixelProjects::CLI
   def list_designer
     @designers = PixelProjects::Designer.all
     @designers.each.with_index(1) do |designer, i|
-      puts "#{i.to_s.rjust(2, "0")}. ⭑ Designer: " + designer.name
-      puts "    ⭑ Location: " + designer.location
-      puts "    ⭑ Bio: " + designer.bio
-      puts "    ⭑ Skills: " + designer.skills.join(", ")
-      puts "    ⭑ Teams: " + designer.teams.join(", ")
-      puts "    ⭑ Web: " + designer.web.join(", ")
-      puts "    ⭑ Profile Url: " + designer.profile_url
-      puts "⭑-------------------------------------------------------------⭑"
+    end
+  end
+
+  def menu
+    input = nil
+    while input != "exit"
+      puts "⭆ Enter the number corresponding to the Dribbble you'd like additional information on."
+      puts "⭆ To see the most recent Dribbbles again, type 'list', or type 'exit' to quit."
+
+      input = gets.strip.downcase
+
+      if input.to_i > 0
+        the_designer = @designers[input.to_i-1]
+          puts "⭑-----------------------------------------------------------------------------⭑"
+          puts "    ⭑ Designer: " + the_designer.name
+          puts "    ⭑ Location: " + the_designer.location
+          puts "    ⭑ Bio: " + the_designer.bio
+          puts "    ⭑ Skills: " + the_designer.skills.join(", ")
+          puts "    ⭑ Teams: " + the_designer.teams.join(", ")
+          puts "    ⭑ Web: " + the_designer.web.join(", ")
+          puts "    ⭑ Profile Url: " + the_designer.profile_url
+          puts "    ⭑     ⭑     ⭑     ⭑     ⭑     ⭑     ⭑     ⭑     ⭑     ⭑     ⭑     ⭑     ⭑"
+          puts "    To see the most recent Dribbbles again, type 'list', or type 'exit' to quit."
+          puts "⭑-----------------------------------------------------------------------------⭑"
+      else input == "list"
+        list_dribbbles
+      end
     end
   end
 
   def goodbye
-    puts "⭑-------------------------------------------------------------⭑"
     puts "                                                               "
     puts "           ¸,ø¤º°`°º¤ø,¸¸,ø¤º°º¤ø,¸¸,ø¤º°`°º¤ø,¸               "
     puts "      ¸,ø¤º°`°º¤ø,¸¸,ø¤º° GOODBYE °º¤ø,¸¸,ø¤º°`°º¤ø,¸          "
