@@ -4,6 +4,7 @@ class PixelProjects::CLI
   def call
     greeting
     make_dribbbles
+    make_designers
     list_dribbbles
     goodbye
   end
@@ -33,6 +34,13 @@ class PixelProjects::CLI
       puts "    ⭑ Comment: " + dribbble.comment.gsub("\n","")
       puts "⭑-------------------------------------------------------------⭑"
     end
+  end
+
+  def make_designers
+    PixelProjects::Dribbble.all.each do |dribbble|
+     designers = PixelProjects::Scraper.scrape_designer(BASE_PATH + dribbble.designer_url)
+     PixelProjects::Designer.create_from_collection(designers)
+   end
   end
 
   def goodbye
