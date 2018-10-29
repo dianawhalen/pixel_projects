@@ -1,4 +1,5 @@
 class PixelProjects::CLI
+  BASE_PATH = "https://dribbble.com"
 
   def call
     greeting
