@@ -3,6 +3,7 @@ class PixelProjects::CLI
 
   def call
     greeting
+    make_dribbbles
     goodbye
   end
 
@@ -15,6 +16,11 @@ class PixelProjects::CLI
     puts "                                                               "
     puts "      Hold tight for the most recent pixel creations!!         "
     puts "⭑-------------------------------------------------------------⭑"
+  end
+
+  def make_dribbbles
+    dribbbles = PixelProjects::Scraper.scrape_dribbbles(BASE_PATH + '/#')
+    PixelProjects::Dribbble.create_from_collection(dribbbles)
   end
 
   def goodbye
