@@ -6,6 +6,7 @@ class PixelProjects::CLI
     make_dribbbles
     make_designers
     list_dribbbles
+    list_designer
     goodbye
   end
 
@@ -41,6 +42,20 @@ class PixelProjects::CLI
      designers = PixelProjects::Scraper.scrape_designer(BASE_PATH + dribbble.designer_url)
      PixelProjects::Designer.create_from_collection(designers)
    end
+  end
+
+  def list_designer
+    @designers = PixelProjects::Designer.all
+    @designers.each.with_index(1) do |designer, i|
+      puts "#{i.to_s.rjust(2, "0")}. ⭑ Designer: " + designer.name
+      puts "    ⭑ Location: " + designer.location
+      puts "    ⭑ Bio: " + designer.bio
+      puts "    ⭑ Skills: " + designer.skills.join(", ")
+      puts "    ⭑ Teams: " + designer.teams.join(", ")
+      puts "    ⭑ Web: " + designer.web.join(", ")
+      puts "    ⭑ Profile Url: " + designer.profile_url
+      puts "⭑-------------------------------------------------------------⭑"
+    end
   end
 
   def goodbye
