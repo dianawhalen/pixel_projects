@@ -1,19 +1,23 @@
 class PixelProjects::Scraper
-  attr_accessor :title, :comment, :shot_url, :designer_url, :designer_name, :name, :location, :bio, :skills, :teams, :profile_url, :web
+  BASE_PATH = "https://dribbble.com"
+
+  attr_accessor :title, :comment, :shot_url, :designer_url, :designer_name, :name, :location, :bio, :skills, :teams, :profile_url, :web, :dribbbles, :dribbble, :url
 
   def self.scrape_dribbbles(dribbbles_url)
-    doc = Nokogiri::HTML(open("https://dribbble.com/#"))
+    doc = Nokogiri::HTML(open(BASE_PATH + '/#'))
 
     dribbbles = []
 
     doc.css('.main-full ol.dribbbles li.group').each do |dribbble|
-      title = dribbble.css("a.dribbble-over").search('strong').text
-      comment = dribbble.css("a.dribbble-over").search("span.comment").text
-      shot_url = dribbble.at("a.dribbble-over").attr('href')
-      designer_url = dribbble.at("a.hoverable.url").attr('href')
-      designer_name = dribbble.at("a.hoverable.url").text.strip
+      if dribbble.at("a.hoverable.url").attributes.keys.include?("href")
+        title = dribbble.css("a.dribbble-over").search('strong').text
+        comment = dribbble.css("a.dribbble-over").search("span.comment").text
+        shot_url = dribbble.at("a.dribbble-over").attr('href').prepend(BASE_PATH)
+        designer_url = dribbble.at("a.hoverable.url").attr('href').prepend(BASE_PATH)
+        designer_name = dribbble.at("a.hoverable.url").text.strip
 
-      dribbbles << {title: title, comment: comment, shot_url: shot_url, designer_url: designer_url, designer_name: designer_name}
+        dribbbles << {title: title, comment: comment, shot_url: shot_url, designer_url: designer_url, designer_name: designer_name}
+      end
     end
     dribbbles
   end
@@ -21,20 +25,21 @@ class PixelProjects::Scraper
   def self.scrape_designer(designer_url)
     doc = Nokogiri::HTML(open(designer_url))
 
-    designers = []
+    designer_hash = {}
 
-    doc.css('.main-full.floating-sidebar-container.group').each do |designer|
-      profile_url = designer.at("h2.vcard a.url").attr('href').prepend("https://dribbble.com")
-      name = designer.at("a.url").text.strip
-      location = designer.css("h2.vcard").search("span.locality").text
-      bio = designer.css(".bio").text
-      skills = designer.css("ul.skills-list").search("a").map(&:text)
-      teams = designer.css("ul.profile-details.on-teams").search("a").map(&:text).map(&:strip)
-      links = designer.css("ul.profile-details").search("a").map(&:text).map(&:strip)
+    page = doc.css('.main-full.floating-sidebar-container.group')
+
+    designer_hash[:profile_url] = designer_url
+    designer_hash[:name] = page.at("a.url").text.strip
+    designer_hash[:location] = page.css("h2.vcard").search("span.locality").text
+    designer_hash[:bio] = page.css(".bio").text
+    designer_hash[:skills] = page.css("ul.skills-list").search("a").map(&:text)
+      teams = page.css("ul.profile-details.on-teams").search("a").map(&:text).map(&:strip)
+      links = page.css("ul.profile-details").search("a").map(&:text).map(&:strip)
       web = links - teams
+    designer_hash[:teams] = teams
+    designer_hash[:web] = web
 
-      designers << {profile_url: profile_url, name: name, location: location, bio: bio, skills: skills, teams: teams, web: web}
-    end
-    designers
+    designer_hash
   end
 end
