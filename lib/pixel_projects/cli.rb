@@ -23,18 +23,6 @@ class PixelProjects::CLI
     PixelProjects::Dribbble.create_from_collection(dribbbles)
   end
 
-  def make_designers
-    dribbbles = PixelProjects::Dribbble.all
-    PixelProjects::Designer.create_from_collection(dribbbles)
-  end
-
-  def add_attributes_to_designers
-    PixelProjects::Designer.all.each do |designer|
-      attributes = PixelProjects::Scraper.scrape_designer(designer.url)
-      designer.add_designer_attributes(attributes)
-    end
-  end
-
   def list_dribbbles
     PixelProjects::Dribbble.all.each.with_index(1) do |dribbble, i|
       puts "#{i.to_s.rjust(2, "0")}. ⭑ Dribbble: " + dribbble.title + " by " + dribbble.designer_name
@@ -45,10 +33,29 @@ class PixelProjects::CLI
     end
   end
 
+  def add_attributes_to_designers(the_designer)
+    attributes = PixelProjects::Scraper.scrape_designer(the_designer.url)
+    the_designer.add_designer_attributes(attributes)
+  end
+
+  def list_designer(the_designer)
+    puts "⭑-------------------------------------------------------------------------------⭑"
+    puts "    ⭑           ⭑           ⭑           ⭑           ⭑           ⭑           ⭑  "
+    puts "          ⭑           ⭑           ⭑           ⭑           ⭑           ⭑        "
+    puts "    ⭑ Designer: " + the_designer.name
+    puts "    ⭑ Location: " + the_designer.location
+    puts "    ⭑ Bio: " + the_designer.bio.gsub("\n","")
+    puts "    ⭑ Skills: " + the_designer.skills.join(", ")
+    puts "    ⭑ Teams: " + the_designer.teams.join(", ")
+    puts "    ⭑ Web: " + the_designer.web.join(", ")
+    puts "    ⭑ Profile Url: " + the_designer.url
+    puts "          ⭑           ⭑           ⭑           ⭑           ⭑           ⭑        "
+    puts "    ⭑           ⭑           ⭑           ⭑           ⭑           ⭑           ⭑  "
+    puts "⭑-------------------------------------------------------------------------------⭑"
+  end
+
   def menu
     make_dribbbles
-    make_designers
-    add_attributes_to_designers
     list_dribbbles
 
     input = nil
@@ -60,19 +67,8 @@ class PixelProjects::CLI
 
       if input.to_i > 0 && input.to_i <= PixelProjects::Dribbble.all.length
         the_designer = PixelProjects::Designer.all[input.to_i-1]
-          puts "⭑-------------------------------------------------------------------------------⭑"
-          puts "    ⭑           ⭑           ⭑           ⭑           ⭑           ⭑           ⭑  "
-          puts "          ⭑           ⭑           ⭑           ⭑           ⭑           ⭑        "
-          puts "    ⭑ Designer: " + the_designer.name
-          puts "    ⭑ Location: " + the_designer.location
-          puts "    ⭑ Bio: " + the_designer.bio.gsub("\n","")
-          puts "    ⭑ Skills: " + the_designer.skills.join(", ")
-          puts "    ⭑ Teams: " + the_designer.teams.join(", ")
-          puts "    ⭑ Web: " + the_designer.web.join(", ")
-          puts "    ⭑ Profile Url: " + the_designer.profile_url
-          puts "          ⭑           ⭑           ⭑           ⭑           ⭑           ⭑        "
-          puts "    ⭑           ⭑           ⭑           ⭑           ⭑           ⭑           ⭑  "
-          puts "⭑-------------------------------------------------------------------------------⭑"
+        the_designer.name ? list_designer(the_designer) : add_attributes_to_designers(the_designer)
+        list_designer(the_designer)
       else input == "list"
         list_dribbbles
       end

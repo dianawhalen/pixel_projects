@@ -1,7 +1,7 @@
 class PixelProjects::Scraper
   BASE_PATH = "https://dribbble.com"
 
-  attr_accessor :title, :comment, :shot_url, :designer_url, :designer_name, :name, :location, :bio, :skills, :teams, :profile_url, :web, :dribbbles, :dribbble, :url
+  attr_accessor :title, :comment, :shot_url, :designer_url, :designer_name, :name, :location, :bio, :skills, :teams, :web, :url
 
   def self.scrape_dribbbles(dribbbles_url)
     doc = Nokogiri::HTML(open(BASE_PATH + '/#'))
@@ -29,7 +29,6 @@ class PixelProjects::Scraper
 
     page = doc.css('.main-full.floating-sidebar-container.group')
 
-    designer_hash[:profile_url] = designer_url
     designer_hash[:name] = page.at("a.url").text.strip
     designer_hash[:location] = page.css("h2.vcard").search("span.locality").text
     designer_hash[:bio] = page.css(".bio").text

@@ -1,10 +1,11 @@
 class PixelProjects::Dribbble
-  attr_accessor :title, :comment, :shot_url, :designer_url, :designer_name, :name, :location, :bio, :skills, :teams, :profile_url, :web, :dribbbles, :dribbble, :url
+  attr_accessor :title, :comment, :shot_url, :designer_url, :designer_name, :name, :location, :bio, :skills, :teams, :web, :url
 
   @@all = []
 
-  def initialize(dribbble)
+  def initialize(dribbble, designer = nil)
     dribbble.each {|key, value| self.send(("#{key}="), value) }
+    @designer = PixelProjects::Designer.new(dribbble[:designer_url])
     @@all << self
   end
 
