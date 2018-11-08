@@ -33,7 +33,7 @@ class PixelProjects::CLI
     end
   end
 
-  def add_attributes_to_designers(the_designer)
+  def add_attributes_to_designer(the_designer)
     attributes = PixelProjects::Scraper.scrape_designer(the_designer.url)
     the_designer.add_designer_attributes(attributes)
   end
@@ -67,8 +67,7 @@ class PixelProjects::CLI
 
       if input.to_i > 0 && input.to_i <= PixelProjects::Dribbble.all.length
         the_designer = PixelProjects::Designer.all[input.to_i-1]
-        the_designer.name ? list_designer(the_designer) : add_attributes_to_designers(the_designer)
-        list_designer(the_designer)
+        the_designer.name ? list_designer(the_designer) : add_attributes_to_designer(the_designer) && list_designer(the_designer)
       else input == "list"
         list_dribbbles
       end
