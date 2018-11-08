@@ -1,7 +1,7 @@
 class PixelProjects::Scraper
   BASE_PATH = "https://dribbble.com"
 
-  attr_accessor :title, :comment, :shot_url, :designer_url, :designer_name, :name, :location, :bio, :skills, :teams, :web, :url
+  attr_accessor :title, :comment, :shot_url, :designer_url, :designer_name, :name, :location, :bio, :skills, :teams, :web, :url, :designer
 
   def self.scrape_dribbbles(dribbbles_url)
     doc = Nokogiri::HTML(open(BASE_PATH + '/#'))
